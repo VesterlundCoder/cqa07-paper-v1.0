@@ -2,7 +2,7 @@
 
 **To:** Editorial Board, npj Quantum Information
 
-**From:** David Vesterlund (david@westquant.ai)
+**From:** David Vesterlund (david@vesterlundventures.se)
 
 **Date:** [Submission date]
 
