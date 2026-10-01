@@ -3,7 +3,7 @@ message: "If you use this software or data, please cite the associated paper."
 title: "CQA07: Exact Zero-Error Communication Complexity of an Entanglement-Assisted Quantum Learning Task"
 authors:
   - given-names: David
-    family-names: Svensson
+    family-names: Vesterlund
     orcid: "https://orcid.org/0009-0000-6455-1141"
 version: 1.0.0
 date-released: 2026-10-01

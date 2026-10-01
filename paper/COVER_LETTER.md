@@ -2,7 +2,7 @@
 
 **To:** Editorial Board, npj Quantum Information
 
-**From:** David Svensson (david@westquant.ai)
+**From:** David Vesterlund (david@westquant.ai)
 
 **Date:** [Submission date]
 
@@ -26,5 +26,5 @@ We confirm that this manuscript has not been published elsewhere and is not unde
 
 Sincerely,
 
-David Svensson
-WestQuant CQA Red Team
+David Vesterlund
+Vesterlund Ventures Holding AB, WestQuant Open
