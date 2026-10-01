@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the associated paper."
+title: "CQA07: Exact Zero-Error Communication Complexity of an Entanglement-Assisted Quantum Learning Task"
+authors:
+  - given-names: David
+    family-names: Svensson
+    orcid: "https://orcid.org/0009-0000-6455-1141"
+version: 1.0.0
+date-released: 2026-10-01
+license: MIT
+repository-code: "https://github.com/VesterlundCoder/cqa07-paper-v1.0"

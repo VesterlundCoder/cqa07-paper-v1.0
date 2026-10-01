@@ -1,0 +1,193 @@
+{
+  "1": {
+    "set_cover": {
+      "n": 1,
+      "formulation": "set_cover_cpsat",
+      "n_variables": 3,
+      "n_constraints": 3,
+      "optimal_value": 2,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 0.034994000000000004
+    },
+    "total_domination": {
+      "n": 1,
+      "formulation": "total_domination_cpsat",
+      "n_variables": 3,
+      "n_constraints": 3,
+      "optimal_value": 2,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 0.0026720000000000003
+    },
+    "match": true
+  },
+  "2": {
+    "set_cover": {
+      "n": 2,
+      "formulation": "set_cover_cpsat",
+      "n_variables": 9,
+      "n_constraints": 9,
+      "optimal_value": 3,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 0.006183
+    },
+    "total_domination": {
+      "n": 2,
+      "formulation": "total_domination_cpsat",
+      "n_variables": 9,
+      "n_constraints": 9,
+      "optimal_value": 3,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 0.0032340000000000003
+    },
+    "match": true
+  },
+  "3": {
+    "set_cover": {
+      "n": 3,
+      "formulation": "set_cover_cpsat",
+      "n_variables": 27,
+      "n_constraints": 27,
+      "optimal_value": 5,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 0.005933000000000001
+    },
+    "total_domination": {
+      "n": 3,
+      "formulation": "total_domination_cpsat",
+      "n_variables": 27,
+      "n_constraints": 27,
+      "optimal_value": 5,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 0.011013
+    },
+    "match": true
+  },
+  "4": {
+    "set_cover": {
+      "n": 4,
+      "formulation": "set_cover_cpsat",
+      "n_variables": 81,
+      "n_constraints": 81,
+      "optimal_value": 8,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 0.12199800000000001
+    },
+    "total_domination": {
+      "n": 4,
+      "formulation": "total_domination_cpsat",
+      "n_variables": 81,
+      "n_constraints": 81,
+      "optimal_value": 8,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 0.27448
+    },
+    "match": true
+  },
+  "5": {
+    "set_cover": {
+      "n": 5,
+      "formulation": "set_cover_cpsat",
+      "n_variables": 243,
+      "n_constraints": 243,
+      "optimal_value": 12,
+      "status": "FEASIBLE",
+      "proven_optimal": false,
+      "best_bound": 10,
+      "time_sec": 60.107023000000005
+    },
+    "total_domination": {
+      "n": 5,
+      "formulation": "total_domination_cpsat",
+      "n_variables": 243,
+      "n_constraints": 243,
+      "optimal_value": 12,
+      "status": "OPTIMAL",
+      "proven_optimal": true,
+      "time_sec": 34.170566
+    },
+    "match": true
+  },
+  "6": {
+    "set_cover": {
+      "n": 6,
+      "formulation": "set_cover_cpsat",
+      "n_variables": 729,
+      "n_constraints": 729,
+      "optimal_value": 18,
+      "status": "FEASIBLE",
+      "proven_optimal": false,
+      "best_bound": 12,
+      "time_sec": 600.0316650000001
+    },
+    "total_domination": {
+      "n": 6,
+      "formulation": "total_domination_cpsat",
+      "n_variables": 729,
+      "n_constraints": 729,
+      "optimal_value": 18,
+      "status": "FEASIBLE",
+      "proven_optimal": false,
+      "best_bound": 12,
+      "time_sec": 600.103191
+    },
+    "match": true
+  },
+  "7": {
+    "set_cover": {
+      "n": 7,
+      "formulation": "set_cover_cpsat",
+      "n_variables": 2187,
+      "n_constraints": 2187,
+      "optimal_value": 29,
+      "status": "FEASIBLE",
+      "proven_optimal": false,
+      "best_bound": 18,
+      "time_sec": 600.0242460000001
+    },
+    "total_domination": {
+      "n": 7,
+      "formulation": "total_domination_cpsat",
+      "n_variables": 2187,
+      "n_constraints": 2187,
+      "optimal_value": 29,
+      "status": "FEASIBLE",
+      "proven_optimal": false,
+      "best_bound": 18,
+      "time_sec": 600.067937
+    },
+    "match": true
+  },
+  "8": {
+    "set_cover": {
+      "n": 8,
+      "formulation": "set_cover_cpsat",
+      "n_variables": 6561,
+      "n_constraints": 6561,
+      "optimal_value": 82,
+      "status": "FEASIBLE",
+      "proven_optimal": false,
+      "best_bound": 26,
+      "time_sec": 600.093111
+    },
+    "total_domination": {
+      "n": 8,
+      "formulation": "total_domination_cpsat",
+      "n_variables": 6561,
+      "n_constraints": 6561,
+      "optimal_value": 81,
+      "status": "FEASIBLE",
+      "proven_optimal": false,
+      "best_bound": 26,
+      "time_sec": 600.02512
+    },
+    "match": false
+  }
+}

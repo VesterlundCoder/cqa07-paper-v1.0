@@ -1,0 +1,629 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning,arrows.meta,calc,shapes.geometric,fit}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=blue!70!black,
+  urlcolor=blue!70!black
+}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\K}{K_3^{\times n}}
+\newcommand{\gammat}{\gamma_t}
+\newcommand{\Bstar}{B^{\!*}}
+\newcommand{\ytildeA}{\tilde{y}^{A}}
+\newcommand{\ytildeB}{\tilde{y}^{B}}
+\newcommand{\xor}{\oplus}
+
+\title{Exact Zero-Error Communication Complexity of an\\
+Entanglement-Assisted Quantum Learning Task}
+
+\author{%
+  David Svensson\thanks{Corresponding author: \texttt{david@westquant.ai}. ORCID: \href{https://orcid.org/0009-0000-6455-1141}{0009-0000-6455-1141}} \\
+  WestQuant CQA Red Team
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Zhao and Deng~\cite{zhaodeng2025} introduced an entanglement-assisted learning task exhibiting a constant-versus-linear separation against communication-bounded classical models: a quantum protocol with $2n$ preshared Bell pairs achieves perfect success with zero input-dependent classical communication, while commonly used classical models must scale linearly to achieve nontrivial accuracy. The exact zero-error one-way classical communication cost was unknown.
+
+We prove an exact reduction: the minimum one-way classical communication for perfect success equals the logarithm of the ternary-cube covering number, equivalently the total domination number of the categorical power $K_3^{\times n}$:
+\[
+  \Bstar(n,1) = \left\lceil \log_2 f(n,3) \right\rceil = \left\lceil \log_2 \gammat(K_3^{\times n}) \right\rceil.
+\]
+Combining this with the 2026 covering result of Kuang and Wang~\cite{kuangwang2026} ($f(n) = (C_3 + o(1))(3/2)^n$), we obtain the exact first-order asymptotic communication rate:
+\[
+  \Bstar(n,1) = n \log_2(3/2) + O(1), \qquad \lim_{n\to\infty} \frac{\Bstar(n,1)}{n} = \log_2(3/2) \approx 0.585.
+\]
+This exposes nonadditive classical communication compression under parallel repetition---joint encoding requires asymptotically only $58.5\%$ of one bit per subtask---while the quantum protocol uses zero input-dependent classical communication with preshared entanglement.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Motivation}
+
+Communication is a restricted resource in distributed quantum learning. When a quantum protocol achieves a learning task with zero communication using preshared entanglement, the natural classical baseline question is: how much one-way communication suffices to match the quantum performance? This question sits at the intersection of quantum learning, communication complexity~\cite{buhrman2010}, and nonlocal game theory~\cite{cleve2004,brassard2005}.
+
+Zhao and Deng~\cite{zhaodeng2025} introduced an entanglement-assisted learning task in which a quantum protocol using $2n$ preshared Bell pairs achieves perfect success with zero classical communication. They establish a constant-versus-linear separation: commonly used classical models must scale at least linearly with $n$ to achieve a larger-than-exponentially-small accuracy, while the quantum model uses a constant number of parameters with linearly-scaling entanglement resources. Their proof is information-theoretic and uses communication lower bounds as the mechanism: entanglement reduces the communication required by non-local tasks. However, the exact zero-error communication cost $\Bstar(n,1)$ was not determined.
+
+\subsection{Three Questions}
+
+This work addresses three questions left open by Zhao and Deng's separation:
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Exact cost:} What is the exact classical one-way communication required for perfect success?
+  \item \textbf{Additivity:} Is communication additive under parallel repetition, i.e., is $\Bstar(n,1) = n \cdot \Bstar(1,1)$?
+  \item \textbf{Rate:} What is the asymptotic communication rate per subtask?
+\end{enumerate}
+
+\subsection{Contributions}
+
+We answer all three:
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Exact reduction} (\Cref{thm:main}): $\Bstar(n,1) = \lceil \log_2 f(n,3) \rceil$, where $f(n,3)$ is the minimum number of binary subcubes covering $\Z_3^n$, equivalently $\gammat(K_3^{\times n})$.
+  \item \textbf{Nonadditivity} (\Cref{cor:compress}): $\Bstar(n,1) < n$ for all $n \geq 4$, with asymptotic ratio $\log_2(3/2) \approx 0.585$.
+  \item \textbf{Asymptotic rate} (\Cref{cor:asymp}): Combining with Kuang and Wang~\cite{kuangwang2026}, $\Bstar(n,1) = n\log_2(3/2) + O(1)$.
+  \item \textbf{Shared randomness} (\Cref{cor:shared}): Shared randomness does not reduce zero-error communication cost.
+\end{enumerate}
+
+\subsection{Novelty}
+
+Our contribution is the exact reduction of a quantum-learning communication problem to ternary-cube covering. The covering problem itself, its equivalence to total domination, the finite-size values, and the asymptotic growth rate are due to the graph and covering literature~\cite{adriaensen2026,kuangwang2026}. Our novelty is establishing that the zero-error communication complexity of the Zhao--Deng task is governed by this invariant, and deriving the communication-theoretic consequences. To our knowledge, these covering results have not previously been translated into the zero-error communication complexity of the Zhao--Deng learning construction.
+
+\section{The Zhao--Deng Task and Communication Model}
+\label{sec:task}
+
+\subsection{Single-Copy Task}
+
+\textbf{Inputs.} Alice receives $x^A \in \{00,01,10,11\}$ and Bob receives $x^B \in \{00,01,10,11\}$. Inputs are drawn independently and uniformly: $X_A, X_B \sim \mathrm{Unif}(\{00,01,10,11\}^n)$ with independent coordinates and parties.
+
+\textbf{Index.} $I(x) = 2x_1 + x_2 \in \{0,1,2,3\}$.
+
+\textbf{Outputs.} Alice produces $y^A = (y_1^A, y_2^A) \in \{0,1\}^2$ and Bob produces $y^B = (y_1^B, y_2^B) \in \{0,1\}^2$.
+
+\textbf{Virtual outputs.} Each party's two output bits induce a three-component virtual output:
+\begin{align*}
+  \ytildeA &= (y_1^A,\; y_2^A,\; y_1^A \xor y_2^A \xor 1), \\
+  \ytildeB &= (y_1^B,\; y_2^B,\; y_1^B \xor y_2^B).
+\end{align*}
+
+\textbf{Winning predicate.}
+\[
+  W(x^A, x^B, y^A, y^B) =
+  \begin{cases}
+    1 & \text{if } I(x^A)=0 \text{ or } I(x^B)=0, \\
+    1 & \text{if } \ytildeB_{I(x^A)} = \ytildeA_{I(x^B)}, \\
+    0 & \text{otherwise.}
+  \end{cases}
+\]
+
+\textbf{Hard inputs} have $I(x) \in \{1,2,3\}$ (i.e., $x \in \{01,10,11\}$). \textbf{Easy inputs} have $I(x)=0$ and auto-win.
+
+The task derives from the Mermin--Peres magic-square construction~\cite{mermin1990,peres1990}, adapted by Zhao and Deng into a learning setting.
+
+\subsection{$n$-Fold Parallel Task}
+
+For $n$ independent copies with $X_A = (x_1^A,\ldots,x_n^A)$, $X_B = (x_1^B,\ldots,x_n^B)$, $Y_A = (y_1^A,\ldots,y_n^A)$, $Y_B = (y_1^B,\ldots,y_n^B)$:
+\[
+  W_n(X_A, X_B, Y_A, Y_B) = \bigwedge_{i=1}^{n} W(x_i^A, x_i^B, y_i^A, y_i^B).
+\]
+
+\subsection{Communication Models}
+
+A \emph{deterministic one-way protocol} with $B$ bits consists of:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item Encoder $e : X_A \to \{0,1\}^B$,
+  \item Alice output $f : X_A \to Y_A$,
+  \item Bob output $g : X_B \times \{0,1\}^B \to Y_B$.
+\end{itemize}
+
+A \emph{shared-randomness protocol} allows all functions to depend on a shared random seed $R$.
+
+The \emph{quantum protocol} of Zhao and Deng~\cite{zhaodeng2025} uses $2n$ preshared Bell pairs and achieves $S_Q(n)=1$ with $B=0$.
+
+\subsection{Success and Complexity}
+
+\[
+  S_n(B) = \max_{e,f,g} \Pr_{X_A,X_B}\bigl[W_n = 1\bigr], \qquad
+  \Bstar(n,q) = \min\{B : S_n(B) \geq q\}.
+\]
+
+Because the input distribution has full support, $S_n(B)=1$ if and only if the protocol wins on every admissible input pair. This connects the distributional score to the zero-error combinatorial theorem.
+
+\section{Single-Copy Compatibility}
+\label{sec:single}
+
+\subsection{The $\xor 1$ Asymmetry}
+
+The key structural feature is the asymmetry between Alice's and Bob's third virtual output component (\Cref{tab:asym}).
+
+\begin{table}[ht]
+\centering
+\caption{The $\xor 1$ asymmetry in the third virtual output component.}
+\label{tab:asym}
+\begin{tabular}{lcc}
+\toprule
+Component & Alice & Bob \\
+\midrule
+$\tilde{y}_1$ & $y_1^A$ & $y_1^B$ \\
+$\tilde{y}_2$ & $y_2^A$ & $y_2^B$ \\
+$\tilde{y}_3$ & $y_1^A \xor y_2^A \xor \mathbf{1}$ & $y_1^B \xor y_2^B$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Compatibility Lemma}
+
+\begin{definition}[Single-copy compatibility]
+\label{def:compat}
+A set $S \subseteq \{01,10,11\}$ of hard Alice inputs is \emph{compatible} if there exist functions $f : S \to \{0,1\}^2$ and $g : \{00,01,10,11\} \to \{0,1\}^2$ such that
+\[
+  \forall x^A \in S,\; \forall x^B \in \{00,01,10,11\}:\quad W(x^A, x^B, f(x^A), g(x^B)) = 1.
+\]
+The quantifier order is: $\exists f,\; \exists g,\; \forall x^A \in S,\; \forall x^B$.
+\end{definition}
+
+\begin{lemma}[Single-copy compatibility]
+\label{lem:single}
+$S \subseteq \{01,10,11\}$ is compatible if and only if $|S| \leq 2$.
+\end{lemma}
+
+\begin{proof}
+\textbf{($\Longleftarrow$) Any 2-element subset is compatible.}
+We give explicit strategies for all three subsets (\Cref{tab:strategies}). In each case, $f$ and $g$ are constant functions; the virtual outputs are chosen so that all required component matches hold.
+
+\begin{table}[ht]
+\centering
+\caption{Explicit compatibility strategies for all three 2-element subsets.}
+\label{tab:strategies}
+\begin{tabular}{ccccc}
+\toprule
+$S$ & $f$ (Alice) & $\ytildeA$ & $g$ (Bob) & $\ytildeB$ \\
+\midrule
+$\{01,10\}$ & $(1,1)$ & $(1,1,1)$ & $(1,1)$ & $(1,1,0)$ \\
+$\{01,11\}$ & $(1,0)$ & $(1,0,0)$ & $(0,1)$ & $(0,1,1)$ \\
+$\{10,11\}$ & $(0,1)$ & $(0,1,0)$ & $(1,0)$ & $(1,0,1)$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For $S = \{01,10\}$: $\ytildeA = (1,1,1)$, $\ytildeB = (1,1,0)$. For any $x^A \in S$ ($I(x^A) \in \{1,2\}$) and hard $x^B$ ($I(x^B) \in \{1,2,3\}$): $\ytildeB_{I(x^A)} = 1$ and $\ytildeA_{I(x^B)} = 1$. Hence $W=1$. The other two cases are verified by the same component-wise check.
+
+\textbf{($\Longrightarrow$) The full set $\{01,10,11\}$ is incompatible.}
+Suppose for contradiction that $f$ and $g$ exist. Let $a_k^{(j)}$ denote Alice's $k$-th virtual component when $I(x^A)=j$, and $b_j^{(k)}$ denote Bob's $j$-th virtual component when $I(x^B)=k$. The winning condition requires
+\[
+  b_j^{(k)} = a_k^{(j)} \qquad \forall j,k \in \{1,2,3\},
+\]
+defining a matrix $M_{jk} = b_j^{(k)} = a_k^{(j)}$.
+
+Alice's virtual output constraint gives $M_{j3} = M_{j1} \xor M_{j2} \xor 1$ for all $j$ (column~3).
+Bob's virtual output constraint gives $M_{3k} = M_{1k} \xor M_{2k}$ for all $k$ (row~3).
+
+At $(j,k)=(3,3)$:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item Row~3: $M_{33} = M_{13} \xor M_{23}$.
+  \item Column~3: $M_{33} = M_{31} \xor M_{32} \xor 1$.
+\end{itemize}
+Substituting the column-3 constraints for $M_{13}, M_{23}$ and the row-3 constraints for $M_{31}, M_{32}$:
+\begin{align*}
+  M_{13} \xor M_{23} &= (M_{11} \xor M_{12} \xor 1) \xor (M_{21} \xor M_{22} \xor 1) = M_{11} \xor M_{21} \xor M_{12} \xor M_{22}, \\
+  M_{31} \xor M_{32} \xor 1 &= (M_{11} \xor M_{21}) \xor (M_{12} \xor M_{22}) \xor 1.
+\end{align*}
+Equating via $M_{33}$ gives $0 = 1$, a contradiction.
+\end{proof}
+
+\section{Parallel Message Classes}
+\label{sec:parallel}
+
+\subsection{$n$-Fold Compatibility}
+
+\begin{definition}[$n$-fold compatibility]
+\label{def:ncompat}
+A set $M \subseteq \{01,10,11\}^n$ is \emph{compatible} if there exist $f : M \to (\{0,1\}^2)^n$ and $g : \{00,01,10,11\}^n \to (\{0,1\}^2)^n$ such that
+\[
+  \forall X_A \in M,\; \forall X_B \in \{00,01,10,11\}^n:\quad W_n(X_A, X_B, f(X_A), g(X_B)) = 1.
+\]
+\end{definition}
+
+The \emph{projection} of $M$ onto coordinate $i$ is $\pi_i(M) = \{x_i^A : \exists X_A \in M,\; X_A[i] = x_i^A\}$.
+
+\subsection{Factorization Lemma}
+
+\begin{lemma}[Factorization]
+\label{lem:factor}
+$M$ is compatible if and only if $\pi_i(M)$ is single-copy compatible for every $i \in \{1,\ldots,n\}$.
+\end{lemma}
+
+\begin{proof}
+\textbf{Necessity ($\Longrightarrow$).}
+Assume $M$ is compatible with functions $f$ and $g$. Fix coordinate $i$ and set $X_B[\ell] = 00$ for all $\ell \neq i$ (easy inputs). For each $j \in \{1,2,3\}$ appearing in $\pi_i(M)$, pick $X_A^{(j)} \in M$ with $I(X_A^{(j)}[i]) = j$.
+
+All coordinates $\ell \neq i$ auto-win, so coordinate $i$ must satisfy $\ytildeB_{I(X_A[i])} = \ytildeA_{I(X_B[i])}$. Since $X_B$ is fixed up to $I(X_B[i]) = k$, the value $\ytildeA_k(X_A)$ must be constant across all $X_A \in M$ with $I(X_A[i]) = j$. Denote this constant by $a_k^{(j)}$, and similarly $b_j^{(k)}$ for Bob. The winning condition gives $b_j^{(k)} = a_k^{(j)}$ for all $j,k$, yielding the same matrix contradiction as in \Cref{lem:single} if all three $j$-values appear. Therefore $|\pi_i(M) \cap \{1,2,3\}| \leq 2$, so $\pi_i(M)$ is single-copy compatible.
+
+\textbf{Sufficiency ($\Longleftarrow$).}
+Assume $\pi_i(M)$ is single-copy compatible for each $i$. By \Cref{lem:single}, for each $i$ there exist $f_i : \pi_i(M) \to \{0,1\}^2$ and $g_i : \{00,01,10,11\} \to \{0,1\}^2$ such that
+\[
+  \forall x_i^A \in \pi_i(M),\; \forall x_i^B:\quad W(x_i^A, x_i^B, f_i(x_i^A), g_i(x_i^B)) = 1.
+\]
+
+Define the global functions by concatenation:
+\begin{align*}
+  f(X_A) &= \bigl(f_1(X_A[1]),\; f_2(X_A[2]),\; \ldots,\; f_n(X_A[n])\bigr), \\
+  g(X_B) &= \bigl(g_1(X_B[1]),\; g_2(X_B[2]),\; \ldots,\; g_n(X_B[n])\bigr).
+\end{align*}
+
+For any $X_A \in M$ and any $X_B$:
+\[
+  W_n = \bigwedge_{i=1}^n W\bigl(X_A[i],\, X_B[i],\, f_i(X_A[i]),\, g_i(X_B[i])\bigr).
+\]
+Since $X_A[i] \in \pi_i(M)$ and $(f_i, g_i)$ achieve single-copy compatibility, each conjunct equals $1$. Hence $W_n = 1$.
+
+\emph{No cross-coordinate consistency conflict arises} because the global predicate is a conjunction of per-coordinate predicates, each depending only on its own coordinate's inputs and outputs. The per-coordinate outputs are chosen independently using the single-copy strategies, and the conjunction is satisfied if and only if each conjunct is satisfied. This is the proof direction most likely to be challenged, and we emphasize: the quantifier order is $\forall X_A \in M,\; \forall X_B,\; W_n = 1$, and the construction satisfies it coordinate-wise.
+\end{proof}
+
+\subsection{From Compatibility to Binary Subcubes}
+
+\begin{lemma}[Binary subcubes]
+\label{lem:subcube}
+A maximal compatible set $M \subseteq \{01,10,11\}^n$ is a binary subcube $A_1 \times \cdots \times A_n$ with $A_i \subseteq \{0,1,2\}$ and $|A_i| = 2$ for each $i$. Conversely, every such binary subcube is compatible.
+\end{lemma}
+
+\begin{proof}
+By \Cref{lem:factor}, $M$ is compatible iff $\pi_i(M)$ is single-copy compatible for each $i$. By \Cref{lem:single}, $|\pi_i(M) \cap \{1,2,3\}| \leq 2$. A maximal compatible set has $|\pi_i(M)| = 2$ for each $i$ (otherwise we could add more elements). So $M \subseteq A_1 \times \cdots \times A_n$ with $A_i = \pi_i(M)$, $|A_i| = 2$.
+
+\emph{Enlargement:} If $M \subsetneq A_1 \times \cdots \times A_n$, enlarging $M$ to the full binary subcube does not change any projection $\pi_i$, so compatibility is preserved by \Cref{lem:factor}. Hence maximal compatible sets are full binary subcubes.
+
+Conversely, any binary subcube $A_1 \times \cdots \times A_n$ with $|A_i| = 2$ has $|\pi_i| = 2$ for each $i$, so it is compatible by \Cref{lem:single} and \Cref{lem:factor}.
+\end{proof}
+
+\section{Exact Reduction to Ternary Coverings}
+\label{sec:reduction}
+
+\subsection{Extension from the Hard-Input Restriction}
+
+The covering argument operates on the all-hard input space $\{01,10,11\}^n \cong \Z_3^n$, while the full Zhao--Deng task allows $\{00,01,10,11\}^n$. We must show that solving the all-hard restriction with $B$ bits is equivalent to solving the full task.
+
+\begin{lemma}[Extension from the hard-input restriction]
+\label{lem:extend}
+If there exists a perfect protocol with $B$ bits for the all-hard restriction (inputs in $\{01,10,11\}^n$), then there exists a perfect protocol with $B$ bits for the full task (inputs in $\{00,01,10,11\}^n$). Hence $\Bstar_{\mathrm{full}}(n,1) = \Bstar_{\mathrm{hard}}(n,1)$.
+\end{lemma}
+
+\begin{proof}
+Define a completion map $\rho : \{00,01,10,11\}^n \to \{01,10,11\}^n$ that leaves every hard coordinate unchanged and replaces every Alice coordinate $00$ by a fixed hard input, say $01$.
+
+Given a perfect protocol for the all-hard restriction with encoder $e$, Alice output $f$, and Bob output $g$:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item Alice computes $\rho(X_A)$ and selects the message class/subcube containing $\rho(X_A)$.
+  \item Alice sends $e(\rho(X_A))$ and outputs $f(\rho(X_A))$.
+  \item Bob uses the same decoder $g(X_B, m)$.
+\end{itemize}
+
+For each coordinate $i$:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item If $x_i^A = 00$: the coordinate wins automatically.
+  \item If $x_i^B = 00$: the coordinate wins automatically.
+  \item If both inputs are hard: $\rho(x_i^A) = x_i^A$, so the hard-input protocol wins.
+\end{itemize}
+Hence $W_n = 1$ for every input pair. The reverse inequality is trivial since the full task includes the hard restriction.
+\end{proof}
+
+All subsequent covering results therefore apply to the full Zhao--Deng task.
+
+\subsection{The Covering Problem}
+
+Let $f(n,3)$ denote the minimum number of binary subcubes $A_1 \times \cdots \times A_n$ (with $A_i \in \binom{\Z_3}{2}$) whose union covers $\Z_3^n$. A simple counting argument gives $f(n,3) \geq \lceil (3/2)^n \rceil$ since each subcube covers $2^n$ of $3^n$ vertices.
+
+\subsection{Graph Domination}
+
+Define $G_n = K_3^{\times n}$: the categorical (direct) product of $n$ copies of $K_3$, with vertex set $\{0,1,2\}^n$ and adjacency $x \sim y$ iff $x_i \neq y_i$ for all $i$. A set $D$ is a \emph{total dominating set} if every vertex has a neighbor in $D$; the minimum size is $\gammat(G_n)$.
+
+The equivalence $f(n,3) = \gammat(K_3^{\times n})$ is established in~\cite{adriaensen2026,kuangwang2026}: the open neighborhood of $a \in \Z_3^n$ in $G_n$ is precisely the binary subcube $Q_a = \{x : x_i \neq a_i\;\forall i\}$, so covering by binary subcubes is exactly total domination.
+
+\subsection{Main Theorem}
+
+\begin{theorem}[Exact communication complexity]
+\label{thm:main}
+For the $n$-fold Zhao--Deng task under deterministic one-way classical communication,
+\[
+  \Bstar(n,1) = \left\lceil \log_2 f(n,3) \right\rceil = \left\lceil \log_2 \gammat(K_3^{\times n}) \right\rceil.
+\]
+\end{theorem}
+
+\begin{proof}
+\textbf{Lower bound.} Let a $B$-bit protocol achieve perfect success. It induces at most $m \leq 2^B$ message classes $M_1, \ldots, M_m$ that cover all hard Alice inputs $\{01,10,11\}^n \cong \Z_3^n$. Each $M_j$ must be compatible (by definition of perfect success). By \Cref{lem:subcube}, for each $M_j$ there exists a binary subcube $C_j \supseteq M_j$. Since the message classes cover $\Z_3^n$:
+\[
+  \Z_3^n \subseteq \bigcup_{j=1}^m M_j \subseteq \bigcup_{j=1}^m C_j.
+\]
+Thus the $C_j$ form a binary-subcube cover, so $m \geq f(n,3)$. Since $m \leq 2^B$, we obtain $2^B \geq f(n,3)$ and $B \geq \lceil \log_2 f(n,3) \rceil$.
+
+Note: the message classes $M_j$ need not themselves be full subcubes; we only use that each is \emph{contained in} a subcube, and the containing subcubes form a cover.
+
+\textbf{Upper bound.} Let $\{C_1, \ldots, C_m\}$ be an optimal binary subcube cover with $m = f(n,3)$. Assign one message label $j \in \{1,\ldots,m\}$ to each $C_j$. Alice, on input $X_A$, computes $\rho(X_A)$ (per \Cref{lem:extend}), finds any $C_j$ containing $\rho(X_A)$, and sends $j$ using $\lceil \log_2 m \rceil$ bits. By \Cref{lem:subcube}, $C_j$ is compatible, so Alice and Bob use the corresponding perfect strategy. When covers overlap, Alice selects any valid $C_j$; the protocol is well-defined since each $C_j$ is independently compatible. Perfect success is achieved, so $\Bstar(n,1) \leq \lceil \log_2 f(n,3) \rceil$.
+\end{proof}
+
+\section{Finite-Size Communication Complexity}
+\label{sec:finite}
+
+\subsection{Exact and Bounded Values}
+
+\Cref{tab:finite} summarizes the covering numbers and communication costs for $n = 1, \ldots, 8$. The values $f(n,3)$ for $n \leq 6$ are exact, from Adriaensen et al.~\cite{adriaensen2026}. The bounds for $n=7$ are from~\cite{adriaensen2026}, and for $n=8$ from Kuang and Wang~\cite{kuangwang2026}.
+
+\begin{table}[ht]
+\centering
+\caption{Finite-size covering numbers and communication costs. $B^*$ is exact for all $n \leq 8$ because the covering bounds lie within single power-of-2 intervals.}
+\label{tab:finite}
+\begin{tabular}{ccccc}
+\toprule
+$n$ & $f(n,3)$ & $\Bstar(n,1)$ & Status & Source \\
+\midrule
+1 & 2 & 1 & Exact & This work \\
+2 & 3 & 2 & Exact & \cite{adriaensen2026} \\
+3 & 5 & 3 & Exact & \cite{adriaensen2026} \\
+4 & 8 & 3 & Exact & \cite{adriaensen2026} \\
+5 & 12 & 4 & Exact & \cite{adriaensen2026} \\
+6 & 18 & 5 & Exact & \cite{adriaensen2026} \\
+7 & $[28, 30]$ & 5 & $B^*$ exact, $f$ bounded & \cite{adriaensen2026} \\
+8 & $[41, 50]$ & 6 & $B^*$ exact, $f$ bounded & \cite{kuangwang2026} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+$\Bstar$ is exact for all $n \leq 8$ because the covering bounds lie within single power-of-2 intervals: $\lceil \log_2 28 \rceil = \lceil \log_2 30 \rceil = 5$ and $\lceil \log_2 41 \rceil = \lceil \log_2 50 \rceil = 6$.
+
+\subsection{Communication Compression}
+
+\begin{corollary}[Non-additivity]
+\label{cor:compress}
+$\Bstar(n,1) < n$ for all $n \geq 4$. Asymptotically,
+\[
+  \frac{\Bstar(n,1)}{n} \to \log_2(3/2) \approx 0.585.
+\]
+\end{corollary}
+
+\begin{proof}
+For $n=4$: $\Bstar(4,1) = 3 < 4$ (exact). For $n \geq 5$, Kuang and Wang~\cite{kuangwang2026} prove $f(n) \leq 2(3/2)^n - 1$. We show $2(3/2)^n < 2^{n-1}$ for $n \geq 5$, equivalently $4(3/4)^n < 1$. At $n=5$: $4(3/4)^5 = 4 \cdot 243/1024 \approx 0.949 < 1$, and $(3/4)^n$ is decreasing. Thus $f(n) < 2^{n-1}$, so $\Bstar(n,1) \leq \lceil \log_2 f(n) \rceil \leq n-1 < n$. The asymptotic ratio follows from \Cref{cor:asymp}.
+\end{proof}
+
+Joint encoding of parallel subtasks compresses communication. This is a classical property of the parallel task structure, not a quantum effect.
+
+\section{Asymptotic Communication Rate}
+\label{sec:asymp}
+
+\subsection{Covering Asymptotics}
+
+Kuang and Wang~\cite{kuangwang2026}, Theorem~1.2, prove:
+\[
+  f(n) = (C_3 + o(1))\left(\frac{3}{2}\right)^n, \qquad 1.62227 < C_3 \leq 2,
+\]
+with $f(n)/(3/2)^n$ nondecreasing.
+
+\subsection{Communication Rate}
+
+\begin{corollary}[Asymptotic rate]
+\label{cor:asymp}
+\[
+  \Bstar(n,1) = n \log_2(3/2) + O(1), \qquad \lim_{n \to \infty} \frac{\Bstar(n,1)}{n} = \log_2(3/2) \approx 0.5849625.
+\]
+\end{corollary}
+
+\begin{proof}
+By \Cref{thm:main}, $\Bstar(n,1) = \lceil \log_2 f(n) \rceil$. Substituting $f(n) = (C_3 + o(1))(3/2)^n$:
+\[
+  \Bstar(n,1) = \left\lceil n \log_2(3/2) + \log_2(C_3 + o(1)) \right\rceil.
+\]
+Since $C_3 \in (1.62227, 2]$, $\log_2(C_3 + o(1))$ is bounded, so $\log_2(C_3 + o(1)) = O(1)$. The ceiling adds at most $1$, so $\Bstar(n,1) = n \log_2(3/2) + O(1)$.
+\end{proof}
+
+\textbf{Attribution.} The covering asymptotic is due to Kuang and Wang~\cite{kuangwang2026}. Our contribution is the exact reduction (\Cref{thm:main}) that translates it into the communication rate.
+
+\subsection{Comparison with Zhao--Deng}
+
+Zhao and Deng~\cite{zhaodeng2025} establish a constant-versus-linear separation for communication-bounded classical models in their learning task, using communication lower bounds to derive linear resource requirements for commonly used classical architectures. Our result addresses the more specific zero-error one-way communication problem and determines its exact communication cost. We do not claim to improve or sharpen their main ML theorem; rather, we resolve a different, more restricted communication quantity.
+
+\section{Quantum--Classical Resource Comparison}
+\label{sec:quantum}
+
+\subsection{Resource Separation}
+
+\Cref{tab:resource} compares the classical and quantum resources.
+
+\begin{table}[ht]
+\centering
+\caption{Communication--entanglement resource separation. Bits and Bell pairs are different resources; we do not claim a numerical ratio.}
+\label{tab:resource}
+\begin{tabular}{lll}
+\toprule
+Resource & Classical & Quantum \\
+\midrule
+Classical communication & $\Bstar(n,1) = n\log_2(3/2) + O(1)$ & $0$ \\
+Preshared entanglement & $0$ & $2n$ Bell pairs \\
+Success & $1$ & $1$ \\
+Model & Deterministic one-way & Zhao--Deng quantum \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This is a \emph{communication--entanglement resource separation}: the quantum protocol achieves perfect success with zero input-dependent communication using preshared entanglement, while the classical protocol requires $\Theta(n)$ communication bits. Bits and Bell pairs are different resources; we do not write that one Bell pair replaces a specific number of bits, nor do we claim a computational speedup or universal quantum advantage.
+
+\subsection{Shared Randomness}
+
+\begin{corollary}[Shared randomness does not help]
+\label{cor:shared}
+$\Bstar_{\text{shared-random}}(n,1) = \Bstar_{\text{deterministic}}(n,1)$.
+\end{corollary}
+
+\begin{proof}
+Suppose a shared-randomness protocol achieves $\Pr_{X_A, X_B, R}[W_n = 1] = 1$. Then $\mathbb{E}_R[\Pr(W_n = 0 \mid R)] = 0$. Since the integrand is nonnegative, $\Pr(W_n = 0 \mid R = r) = 0$ for almost every $r$. Fix one such $r$. Because the input domain is finite and the input distribution has full support, zero distributional failure implies success on every input pair. The resulting deterministic protocol has the same communication budget $B$ and zero error. Hence $\Bstar_{\text{shared-random}} \geq \Bstar_{\text{deterministic}}$. The reverse inequality is trivial.
+\end{proof}
+
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Quantum Learning and Zhao--Deng}
+
+Zhao and Deng~\cite{zhaodeng2025} introduce the entanglement-assisted learning task, establish the quantum protocol with $2n$ Bell pairs and zero communication, and prove a constant-versus-linear separation against commonly used classical models. Their result concerns expressivity, inference speed, and training efficiency of quantum versus classical ML models, using communication lower bounds as the mechanism. They demonstrate noise robustness and provide experimental evidence on trapped-ion hardware. Our work addresses the more specific question of exact zero-error one-way communication cost, which they do not determine.
+
+\subsection{Nonlocal Games, Pseudo-Telepathy, and Communication}
+
+The question of how much classical communication is needed to simulate quantum correlations has a rich history. Buhrman et al.~\cite{buhrman2010} provide a comprehensive review of nonlocality and communication complexity. Toner and Bacon~\cite{toner2003} showed that one bit of communication suffices to simulate projective measurements on any two-qubit entangled state; Bacon and Toner~\cite{bacon2003} further studied Bell inequalities with auxiliary communication.
+
+Pseudo-telepathy---quantum protocols that win nonlocal games with certainty where classical protocols cannot---was formalized by Brassard, Broadbent, and Tapp~\cite{brassard2005}. Cleve et al.~\cite{cleve2004} established foundational results on nonlocal strategies and their limits. The Mermin--Peres magic-square construction~\cite{mermin1990,peres1990} underlies many pseudo-telepathy games.
+
+Most directly relevant to our work, M\'arton et al.~\cite{marton2024} study fixed one-bit classical simulation bounds for parallel pseudo-telepathy constructions, including the Magic Square game. They show that two copies of the Magic Square game can beat the bidirectional one-bit classical bound. Our work differs in that we determine the exact zero-error one-way communication cost of the modified Zhao--Deng learning task through a covering reduction, rather than studying fixed communication bounds for Bell inequality violations.
+
+\subsection{Graph Domination and Ternary Covering}
+
+Total domination in direct products of graphs was initiated by Rall~\cite{rall2005}, who proved $\gammat(G \times H) \leq \gammat(G) \cdot \gammat(H)$ for graphs without isolated vertices. Meki\v{s}~\cite{mekis2010} gave lower bounds $\gamma(\times_{i=1}^t K_{n_i}) \geq t+1$ for direct products of complete graphs.
+
+Adriaensen et al.~\cite{adriaensen2026} defined the skirting problem---finding a smallest set $S \subseteq \Z_q^n$ such that every $x \in \Z_q^n$ is at Hamming distance $n$ from some element of $S$---and identified it with total domination in $G(n,q)$. They computed exact values including $f(6,3) = 18$ and bounds $28 \leq f(7,3) \leq 30$. This work is accepted in the Bulletin of the Institute of Combinatorics and its Applications.
+
+Kuang and Wang~\cite{kuangwang2026} proved the asymptotic $f(n) = (C_3 + o(1))(3/2)^n$ with $1.62227 < C_3 \leq 2$ and $f(n)/(3/2)^n$ nondecreasing, answering a problem of Imre Leader. They also improved the bounds for $n=8$ to $41 \leq f(8,3) \leq 50$.
+
+\textbf{Bridge.} To our knowledge, these covering results have not previously been translated into the zero-error communication complexity of the Zhao--Deng learning construction. Our contribution is establishing this connection.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Interpretation}
+
+The result shows that zero-error communication complexity of the Zhao--Deng task is governed by a classical combinatorial invariant. The asymptotic rate $\log_2(3/2) \approx 0.585$ bits per subtask is the exact first-order communication cost.
+
+\subsection{Non-Additivity}
+
+Communication compression under parallel repetition is a classical property: the covering structure allows joint encoding across subtasks. This is not quantum compression. The compression ratio $\log_2(3/2) \approx 0.585$ means that parallel encoding requires asymptotically only $58.5\%$ of one bit per subtask.
+
+\subsection{Scope}
+
+This is not a universal computational advantage. It is a communication--entanglement resource separation in a specific learning task. The result applies to deterministic and shared-randomness one-way communication with perfect success ($q=1$). Extensions to imperfect success ($q < 1$), interactive communication, and other pseudo-telepathy-derived tasks are left for future work.
+
+\section{Conclusion}
+
+We have shown that the zero-error communication complexity of the Zhao--Deng entanglement-assisted learning task reduces exactly to a total domination problem on $K_3^{\times n}$. The exact formula $\Bstar(n,1) = \lceil \log_2 f(n,3) \rceil$ combined with the 2026 covering asymptotics of Kuang and Wang yields the exact first-order rate $\Bstar(n,1) = n\log_2(3/2) + O(1)$. The communication cost exhibits nonadditive compression under parallel repetition, while the quantum protocol achieves perfect success with zero input-dependent communication using $2n$ preshared Bell pairs.
+
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Exact single-copy enumeration}
+
+The single-copy no-communication optimum $S_1(0) = 15/16$ was verified by exhaustive enumeration over all $4^4 = 256$ deterministic Alice strategies and $4^4 = 256$ deterministic Bob strategies (65536 strategy pairs), computing the winning probability for each pair under uniform inputs.
+
+\subsection{Binary-subcube and total-domination computation}
+
+Two independent integer linear programming (ILP) formulations were used to compute $f(n,3)$:
+
+\textbf{Set-cover formulation.} Binary variable $z_c$ for each center $c \in \Z_3^n$; constraint $\sum_{c : d_H(c,x)=n} z_c \geq 1$ for each $x \in \Z_3^n$; minimize $\sum_c z_c$.
+
+\textbf{Total-domination formulation.} Binary variable $z_v$ for each vertex $v$ of $G_n = K_3^{\times n}$; constraint $\sum_{u \in N(v)} z_u \geq 1$ for each $v$; minimize $\sum_v z_v$.
+
+Both formulations were solved using OR-Tools CP-SAT (v9.11) with a 600-second timeout per instance. For $n \leq 5$, both returned optimal solutions matching the literature values. For $n = 6, 7$, both returned feasible solutions matching the published values~\cite{adriaensen2026}. The $n=6$ value $f(6,3)=18$ is independently confirmed by our computation and by~\cite{adriaensen2026}.
+
+\subsection{Computational verification of communication protocols}
+
+For $n = 1, 2, 3, 4$, the covering-based protocol was verified exhaustively: all $16^{2n}$ input pairs were tested, and each achieved score $1.0$ with the protocol using $\lceil \log_2 f(n,3) \rceil$ bits.
+
+\subsection{Reproducibility}
+
+All computations were performed in Python 3.11 using OR-Tools for ILP solving and NumPy/SciPy for numerical verification. The code and data are described in the Code Availability section.
+
+\subsection*{Use of generative AI}
+
+Generative AI tools were used during manuscript preparation for language editing, code review, and literature organization. All mathematical statements, proofs, computational results, bibliographic references, and final manuscript content were independently reviewed and verified by the author, who takes full responsibility for the work.
+
+\section*{Data Availability}
+
+All computational data generated in this study, including exhaustive verification outputs, covering/ILP instances, and finite-size communication tables, are available in the associated code repository at \href{https://github.com/VesterlundCoder/cqa07-paper-v1.0}{github.com/VesterlundCoder/cqa07-paper-v1.0} and archived on Zenodo at \texttt{[DOI to be inserted upon archiving]}.
+
+\section*{Code Availability}
+
+The code used for exhaustive strategy enumeration, graph-domination verification, finite-size covering computations, communication-protocol verification, and figure generation is publicly available at \href{https://github.com/VesterlundCoder/cqa07-paper-v1.0}{github.com/VesterlundCoder/cqa07-paper-v1.0} and archived in a versioned Zenodo release at \texttt{[DOI to be inserted upon archiving]}.
+
+\section*{Author Contributions}
+
+D.S.: conceptualization, mathematical derivation, software, verification, literature review, visualization, manuscript writing.
+
+\section*{Competing Interests}
+
+The author declares no financial or non-financial competing interests.
+
+\section*{Acknowledgements}
+
+This work was conducted as part of the WestQuant Classical Quantum Advantage Red Team (CQA) program. The author thanks the program participants for valuable discussions.
+
+\appendix
+
+\section{No-Communication Baseline}
+\label{app:nocomm}
+
+The single-copy no-communication optimum is $S_1(0) = 15/16$ (exhaustively verified over 65536 strategy pairs). The product strategy gives $S_n(0) \geq (15/16)^n$. Equality is computationally verified for $n \leq 4$. General multiplicativity under parallel repetition is an open question, not needed for the main theorem.
+
+\begin{thebibliography}{99}
+
+\bibitem{zhaodeng2025}
+Zhao, H. \& Deng, D.-L. Entanglement-induced provable and robust quantum learning advantages. \emph{npj Quantum Inf.} \textbf{11}, 127 (2025).
+
+\bibitem{adriaensen2026}
+Adriaensen, S., Ihringer, F., Martin, W.~J. \& Villagr\'an, R.~R. Skirting the $n$-tuples. \emph{Bull. Inst. Comb. Appl.} (forthcoming); arXiv:2602.01080 (2026).
+
+\bibitem{kuangwang2026}
+Kuang, P. \& Wang, Y. Covering the ternary cube by binary subcubes. arXiv:2608.13252 (2026).
+
+\bibitem{rall2005}
+Rall, D.~F. Total domination in categorical products of graphs. \emph{Discuss. Math. Graph Theory} \textbf{25}, 35--44 (2005).
+
+\bibitem{mekis2010}
+Meki\v{s}, G. Lower bounds for the domination number and the total domination number of direct product graphs. \emph{Discrete Math.} \textbf{310}, 3310--3317 (2010).
+
+\bibitem{marton2024}
+M\'arton, I., Bene, E., Divi\'anszky, P. \& V\'ertesi, T. Beating one bit of communication with and without quantum pseudo-telepathy. \emph{npj Quantum Inf.} \textbf{10}, 79 (2024).
+
+\bibitem{buhrman2010}
+Buhrman, H., Cleve, R., Massar, S. \& de Wolf, R. Nonlocality and communication complexity. \emph{Rev. Mod. Phys.} \textbf{82}, 665--698 (2010).
+
+\bibitem{toner2003}
+Toner, B.~F. \& Bacon, D. Communication cost of simulating Bell correlations. \emph{Phys. Rev. Lett.} \textbf{91}, 187904 (2003).
+
+\bibitem{bacon2003}
+Bacon, D. \& Toner, B.~F. Bell inequalities with auxiliary communication. \emph{Phys. Rev. Lett.} \textbf{90}, 157904 (2003).
+
+\bibitem{cleve2004}
+Cleve, R., H{\o}yer, P., Toner, B. \& Watrous, J. Consequences and limits of nonlocal strategies. In \emph{Proc. 19th IEEE Conf. Computational Complexity} 236--249 (2004).
+
+\bibitem{brassard2005}
+Brassard, G., Broadbent, A. \& Tapp, A. Quantum pseudo-telepathy. \emph{Found. Phys.} \textbf{35}, 1877--1907 (2005).
+
+\bibitem{mermin1990}
+Mermin, N.~D. Simple unified form for the major no-hidden-variables theorems. \emph{Phys. Rev. Lett.} \textbf{65}, 3373--3376 (1990).
+
+\bibitem{peres1990}
+Peres, A. Incompatible results of quantum measurements. \emph{Phys. Lett. A} \textbf{151}, 107--108 (1990).
+
+\end{thebibliography}
+
+\end{document}

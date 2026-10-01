@@ -1,0 +1,20 @@
+{
+  "6": {
+    "n": 6,
+    "n_vertices": 729,
+    "time_sec": 1800.063098192215,
+    "optimal_value": 18,
+    "best_bound": 16,
+    "status": "FEASIBLE",
+    "proven_optimal": false
+  },
+  "7": {
+    "n": 7,
+    "n_vertices": 2187,
+    "time_sec": 1800.0640292167664,
+    "optimal_value": 29,
+    "best_bound": 19,
+    "status": "FEASIBLE",
+    "proven_optimal": false
+  }
+}
