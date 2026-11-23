@@ -1,0 +1,17 @@
+{
+  "title": "CQA07: Exact Zero-Error Communication Complexity of an Entanglement-Assisted Quantum Learning Task",
+  "upload_type": "software",
+  "version": "2.0.0",
+  "publication_date": "2026-11-23",
+  "creators": [
+    {
+      "name": "Vesterlund, David",
+      "affiliation": "WestQuant Open, Vesterlund Ventures Holding AB",
+      "orcid": "0009-0000-6455-1141"
+    }
+  ],
+  "description": "Version 2.0.0 reproducibility package prepared for a Research submission to Discover Quantum Science. Includes the revised manuscript, generated figures, exhaustive protocol checks and explicit solver logs/status. Computed optima, literature results and time-limited bounds are distinguished. This archive does not claim journal acceptance.",
+  "access_right": "open",
+  "license": "mit-license",
+  "keywords": ["communication complexity", "quantum learning", "magic-square game", "ternary coverings", "reproducibility"]
+}

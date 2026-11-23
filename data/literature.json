@@ -1,0 +1,9 @@
+{
+ "_note": "Values taken from the literature, NOT computed by this repository. Check against the cited sources before use.",
+ "f_n3": {
+  "6": {"lower": 18, "upper": 18, "source": "Adriaensen et al., arXiv:2602.01080"},
+  "7": {"lower": 28, "upper": 30, "source": "Adriaensen et al., arXiv:2602.01080"},
+  "8": {"lower": 41, "upper": 50, "source": "Kuang & Wang, arXiv:2608.13252"}
+ },
+ "C3": {"lower_exclusive": 1.62227, "upper": 2, "source": "Kuang & Wang, arXiv:2608.13252, Thm 1.2"}
+}

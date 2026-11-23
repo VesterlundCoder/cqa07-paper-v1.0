@@ -1,0 +1,42 @@
+[
+ {
+  "n": 1,
+  "cover_size": 2,
+  "message_bits": 1,
+  "input_pairs_tested": 16,
+  "failures": 0,
+  "messages_used": 2
+ },
+ {
+  "n": 2,
+  "cover_size": 3,
+  "message_bits": 2,
+  "input_pairs_tested": 256,
+  "failures": 0,
+  "messages_used": 3
+ },
+ {
+  "n": 3,
+  "cover_size": 5,
+  "message_bits": 3,
+  "input_pairs_tested": 4096,
+  "failures": 0,
+  "messages_used": 5
+ },
+ {
+  "n": 4,
+  "cover_size": 8,
+  "message_bits": 3,
+  "input_pairs_tested": 65536,
+  "failures": 0,
+  "messages_used": 8
+ },
+ {
+  "n": 5,
+  "cover_size": 12,
+  "message_bits": 4,
+  "input_pairs_tested": 1048576,
+  "failures": 0,
+  "messages_used": 12
+ }
+]

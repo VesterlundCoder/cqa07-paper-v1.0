@@ -1,0 +1,187 @@
+{
+  "checked_date": "2026-11-23",
+  "primary_sources": [
+    {
+      "name": "kuang_wang",
+      "url": "https://arxiv.org/html/2608.13252v1",
+      "sha256": "5af0db9bc7f48a5365ca028c597d030427c7592eb74bd6403b1f6e3f80a58586",
+      "status": "retrieved"
+    },
+    {
+      "name": "adriaensen",
+      "url": "https://arxiv.org/html/2602.01080v1",
+      "sha256": "dc147d52adf5a3a2e0841b4cd71b04b8963d124353855b80a5989df6395db3b2",
+      "status": "retrieved"
+    },
+    {
+      "name": "zhao_deng",
+      "url": "https://www.nature.com/articles/s41534-025-01078-x",
+      "sha256": "25fb38a0a572b3b09d174806f67f5d184a47bf1e0e16138b0b43b7990cec5f9d",
+      "status": "retrieved"
+    },
+    {
+      "name": "dqs_guidelines",
+      "url": "https://link.springer.com/journal/44464/submission-guidelines",
+      "sha256": "38344f0a16f7203b1afdb1d3bdcaf460c63d11d4d9c53d65af0d26a52f9dbf0f",
+      "status": "retrieved"
+    }
+  ],
+  "bibliographic_metadata": [
+    {
+      "DOI": "10.1103/revmodphys.82.665",
+      "title": [
+        "Nonlocality and communication complexity"
+      ],
+      "container-title": [
+        "Reviews of Modern Physics"
+      ],
+      "volume": "82",
+      "page": "665-698",
+      "published": {
+        "date-parts": [
+          [
+            2010,
+            3,
+            11
+          ]
+        ]
+      }
+    },
+    {
+      "DOI": "10.1103/physrevlett.90.157904",
+      "title": [
+        "Bell Inequalities with Auxiliary Communication"
+      ],
+      "container-title": [
+        "Physical Review Letters"
+      ],
+      "volume": "90",
+      "page": null,
+      "published": {
+        "date-parts": [
+          [
+            2003,
+            4,
+            18
+          ]
+        ]
+      }
+    },
+    {
+      "DOI": "10.1103/physrevlett.65.3373",
+      "title": [
+        "Simple unified form for the major no-hidden-variables theorems"
+      ],
+      "container-title": [
+        "Physical Review Letters"
+      ],
+      "volume": "65",
+      "page": "3373-3376",
+      "published": {
+        "date-parts": [
+          [
+            1990,
+            12,
+            31
+          ]
+        ]
+      }
+    },
+    {
+      "DOI": "10.1016/0375-9601(90)90172-k",
+      "title": [
+        "Incompatible results of quantum measurements"
+      ],
+      "container-title": [
+        "Physics Letters A"
+      ],
+      "volume": "151",
+      "page": "107-108",
+      "published": {
+        "date-parts": [
+          [
+            1990,
+            12
+          ]
+        ]
+      }
+    },
+    {
+      "DOI": "10.7151/dmgt.1257",
+      "title": [
+        "Total Domination in Categorical Products of Graphs"
+      ],
+      "container-title": [
+        "Discussiones Mathematicae Graph Theory"
+      ],
+      "volume": "25",
+      "page": "35",
+      "published": {
+        "date-parts": [
+          [
+            2005
+          ]
+        ]
+      }
+    },
+    {
+      "DOI": "10.1016/j.disc.2010.07.015",
+      "title": [
+        "Lower bounds for the domination number and the total domination number of direct product graphs"
+      ],
+      "container-title": [
+        "Discrete Mathematics"
+      ],
+      "volume": "310",
+      "page": "3310-3317",
+      "published": {
+        "date-parts": [
+          [
+            2010,
+            12
+          ]
+        ]
+      }
+    },
+    {
+      "DOI": "10.1103/physrevlett.91.187904",
+      "title": [
+        "Communication Cost of Simulating Bell Correlations"
+      ],
+      "container-title": [
+        "Physical Review Letters"
+      ],
+      "volume": "91",
+      "page": null,
+      "published": {
+        "date-parts": [
+          [
+            2003,
+            10,
+            31
+          ]
+        ]
+      }
+    },
+    {
+      "DOI": "10.1038/s41534-024-00874-1",
+      "title": [
+        "Beating one bit of communication with and without quantum pseudo-telepathy"
+      ],
+      "container-title": [
+        "npj Quantum Information"
+      ],
+      "volume": "10",
+      "page": null,
+      "published": {
+        "date-parts": [
+          [
+            2024,
+            8,
+            22
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "python": "3.12.15 (main, Sep 30 2026, 22:04:19) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "platform": "macOS-26.6.2-arm64-arm-64bit",
+  "packages": {
+    "numpy": "2.3.5",
+    "scipy": "1.18.0",
+    "matplotlib": "3.10.8"
+  },
+  "code_sha256": {
+    "covering_ilp.py": "b74a1658e8f694a54068d07af9553024ca815a23e7c43bfcc38afbf6daf88f76",
+    "make_figures.py": "1922ccc333934882ac8760d5923b509599feeb0b327db3bc5c3dab1a0b6966fb",
+    "no_comm_n2.py": "6e6b56fecac501fc6f0b8c9577e3ce7927bf1233a3601ef9bde8aafe65ec0f07",
+    "no_comm_n2_exact.py": "3478524f118ed641808a07fb176437360d28e8a9b587aa182f2e289572dced12",
+    "protocol_check.py": "a50360f6d9c22bea7f7340c5de8897cf62ab080e21b954571059c0868e90d77b",
+    "run_all.sh": "a95f1549185f74c4a7b18ff424346022714fc105d7ba3cabd8db1d6674124cb6",
+    "single_copy.py": "1144f55d1b5c5ded77201288648881d0203094e72273285ad6f423a98350e63c",
+    "task.py": "76f146712fa3e8f7af9d2f8c3d2dba7d4099f797227679b0ce96a2818adcd195"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "protocol_input_pairs": 1118480,
+  "manuscript_values": {
+    "CoverSixIncumbent": 25,
+    "CoverSixLower": 15,
+    "NtwoHeuristic": 227,
+    "NtwoIncumbent": 227,
+    "NtwoUpper": 238,
+    "NtwoStatus": "time limit reached"
+  },
+  "bound_rule": "floor(raw solver upper bound + 1e-6), capped at 256; the strategy score is integral",
+  "data_sha256": {
+    "literature.json": "df9506f71edf3a3c4745d20c83c8ef1e6027d1898fc561aa6661b40541610278",
+    "runtime.json": "c0b32cd4037ffe0f8075d7bbe413f09ce9fd66df5b331eebb1c4e7f57c9bd68a",
+    "reference_sources.json": "f4de4dc1d2441fbd630ca68f7ef225394c84058cd228e59692633d6d1c2e2b5c",
+    "no_comm_n2_exact.json": "5d7f599e49aaa1be4a3197863e2756d4e1e47111c5deba77710d7cdc1418484c",
+    "no_comm_n2.json": "f34ebd729b6c02147a7279cef1319f83cdd3c69d4392cab62ebbcc69d2073caf",
+    "covering.json": "10bc414ed0359ddc1889188f14dd10e2b219eac765b558ec051bbe98c77538e1",
+    "protocol_check.json": "9ae970cab95529344678d5c9c40817ce7b29861aef46cf16dfe0be9abdd3bd1a",
+    "single_copy.json": "932046d84be123400aad4739700b777870f81b8142877d7087e7e4165cc8a591"
+  },
+  "finalizer_sha256": "769d6a27eccf6a586cf8aed149cc2a1c035fe2c9578d06cb9e3ca7d26ecf42b7"
+}
